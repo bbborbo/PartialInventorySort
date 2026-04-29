@@ -50,18 +50,20 @@ namespace PartialInventorySort
                 //do not sort any
                 if (lunarItemSortMode == SortMode.Unsorted && questItemSortMode == SortMode.Unsorted && scrapItemSortMode == SortMode.Unsorted)
                 {
-                    acquisitionOrder.Add(itemIndexToAdd);
+                    inventory.itemAcquisitionOrder.Add(itemIndexToAdd);
+                    return;
+                }
+
+                ItemDef itemDefToAdd = ItemCatalog.GetItemDef(itemIndexToAdd);
+                SortMode sortModeOfNewItem = GetSortMode(itemIndexToAdd);
+                if(sortModeOfNewItem == SortMode.VeryLast)
+                {
+                    inventory.itemAcquisitionOrder.Add(itemIndexToAdd);
                     return;
                 }
 
                 List<ItemIndex> firstHalf = new List<ItemIndex>();
                 List<ItemIndex> secondHalf = new List<ItemIndex>();
-
-                ItemDef itemDefToAdd = ItemCatalog.GetItemDef(itemIndexToAdd);
-                SortMode sortModeOfNewItem = GetSortMode(itemIndexToAdd);
-                //bool sortNewByLunar = lunarItemSortMode != SortMode.Unsorted && (itemDefToAdd.deprecatedTier == ItemTier.Lunar);
-                //bool sortNewByQuest = questItemSortMode != SortMode.Unsorted && (itemDefToAdd.ContainsTag(ItemTag.ObjectiveRelated));
-                //bool sortNewByScrap = scrapItemSortMode != SortMode.Unsorted && (itemDefToAdd.ContainsTag(ItemTag.Scrap) || itemDefToAdd.ContainsTag(ItemTag.PriorityScrap));
 
                 //sort all items in inventory into before or after our item
                 foreach (ItemIndex index in acquisitionOrder)
